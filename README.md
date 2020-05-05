@@ -13,6 +13,10 @@
 ### Run following sql sentences 
  
 ```SQL
+
+insert into aws_obs_filter select stationid, altitude , m_date , snow_depth , geom from aws_observation ao where m_date > '2020-01-13';
+insert into spa_obs_filter select stationid, altitude , m_date , snow_depth , geom from spa_observation ao where m_date > '2020-01-13';
+
 REFRESH MATERIALIZED VIEW daily_aws_3857; 
 REFRESH MATERIALIZED VIEW daily_spa_3857;
 REFRESH MATERIALIZED VIEW daily_syn_3857;
