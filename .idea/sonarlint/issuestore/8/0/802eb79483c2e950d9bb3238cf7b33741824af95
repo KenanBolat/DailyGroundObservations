@@ -1,7 +1,7 @@
 
-6python:S125"Remove this commented out code.(»ÑÆ¼
-qpython:S3776"TRefactor this function to reduce its Cognitive Complexity from 20 to the 15 allowed.(‚ÛÜ¥ûÿÿÿÿ
-spython:S117!"WRename this local variable "fromIn" to match the regular expression ^[_a-z][a-z0-9_]*$.(í‚ƒ¢ıÿÿÿÿ
-qpython:S117""URename this local variable "toIn" to match the regular expression ^[_a-z][a-z0-9_]*$.(öû²øÿÿÿÿ
 ;python:S125"Remove this commented out code.(ÇÂÔúÿÿÿÿ
 Vpython:S1313"2Make this IP "192.168.0.221" address configurable.(Ş±ôúÿÿÿÿ8—Œ¯¢û-
+6python:S125"Remove this commented out code.(»ÑÆ¼
+spython:S117!"WRename this local variable "fromIn" to match the regular expression ^[_a-z][a-z0-9_]*$.(í‚ƒ¢ıÿÿÿÿ
+qpython:S3776"TRefactor this function to reduce its Cognitive Complexity from 20 to the 15 allowed.(‚ÛÜ¥ûÿÿÿÿ
+qpython:S117""URename this local variable "toIn" to match the regular expression ^[_a-z][a-z0-9_]*$.(öû²øÿÿÿÿ
