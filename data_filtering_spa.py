@@ -4,7 +4,7 @@ import random
 import datetime
 
 conn = psycopg2.connect(
-    "dbname = MGM user=postgres password = <password> host = 192.168.0.221 port = 5432"
+    "dbname = MGM user=postgres password = kalman host = 192.168.0.221 port = 5432"
 )
 print('Database Connection Successfull...')
 curr = conn.cursor()
@@ -13,7 +13,7 @@ station_sql = 'SELECT DISTINCT(stationid) from spa_observation'
 #TODO Add updating mechanism
 """
 SELECT * INTO spa_obs_filter_Backup_191103  FROM spa_obs_filter;
-insert into spa_obs_filter(stationid, altitude, m_date, snow_depth, geom) select stationid, altitude, m_date, snow_depth, geom from spa_observation where m_date > '2019-09-25';
+insert into spa_obs_filter(stationid, altitude, m_date, snow_depth, geom) select stationid, altitude, m_date, snow_depth, geom from spa_observation where m_date > '2020-01-10';
 
 """
 # create_table_sql = 'SELECT * INTO spa_obs_filter FROM spa_observation'
@@ -33,7 +33,7 @@ def filtering(array, size):
     fromIn = 0
     toIn = size
     new_array = []
-    for i in range(0, len(array) - 1):
+    for i in range(len(array)):
         if i < (size - 10) or i > len(array) - 10:
             new_array.extend([array[i]])
         else:
@@ -56,28 +56,51 @@ def filtering(array, size):
             fromIn += 1
             toIn += 1
             target_index += 1
-    new_array.extend(array[-1:])
     return new_array
 
 
 for station in stations:
     station_start = datetime.datetime.now()
     curr.execute(
-        f'SELECT snow_depth, m_date, stationid FROM spa_observation WHERE stationid = {station[0]} and m_date > \'2019-02-25\' and snow_depth is not NULL and status = 0 ORDER BY m_date ASC')
+        f'SELECT snow_depth, m_date, stationid FROM spa_observation WHERE stationid = {station[0]} and m_date > \'2020-01-10\' and snow_depth is not NULL ORDER BY m_date ASC')
     temp_observations = curr.fetchall()
     sd = [temp_observations[0] for temp_observations in temp_observations[:]]
     dates = [temp_observations[1]
              for temp_observations in temp_observations[:]]
     ids = [temp_observations[2] for temp_observations in temp_observations[:]]
     filtered_values = filtering(sd, 19)
+
     rows = []
     for i in range(0, len(filtered_values)):
         rows.append({
-            'stationid': ids[i - 1], 'm_date': dates[i - 1], 'snow_depth': filtered_values[i - 1]
+            'stationid': ids[i], 'm_date': dates[i], 'snow_depth': sd[i]
         })
-    rows = tuple([row for row in rows if row['snow_depth'] == 999999])
+
+    rows_filtered = []
+    for i in range(0, len(filtered_values)):
+        rows_filtered.append({
+            'stationid': ids[i], 'm_date': dates[i], 'snow_depth': filtered_values[i]
+        })
+    set_filtered = filtered_values
+    set_unfiltered = [r['snow_depth'] for r in rows]
+    filtered_index = []
+    for en, i in enumerate(set_filtered):
+        if not i == set_unfiltered[en]:
+            filtered_index.append(en)
+
+    rows_to_be_updated = [rows_filtered[i] for i in filtered_index]
+    print(station, "==>", filtered_index.__len__(), rows.__len__())
+
+
+
+
+
+
+
+
+
     curr.executemany(
-        'UPDATE spa_obs_filter SET snow_depth = %(snow_depth)s , status=1 WHERE stationid = %(stationid)s and m_date = %(m_date)s', rows)
+        'UPDATE spa_obs_filter SET snow_depth = %(snow_depth)s , status=1 WHERE stationid = %(stationid)s and m_date = %(m_date)s', rows_to_be_updated)
     conn.commit()
     print('Station ', station[0],
           f'completed in --> {datetime.datetime.now()-station_start}')
