@@ -15,14 +15,14 @@ class DataMigration(object):
     def __init__(self):
         self.log = []
         self.starttime = datetime.datetime.now()
-        self.__process_path = r'E:\DailyGroundObservations'
+        self.__process_path = r'/home/knn/Desktop/data'
         self.port = 5432
         self.type_ = None
         self.password = 'kalman'
         self.dbname = 'MGM'  # 'MGM_Updated'
         self.user = 'postgres'
         self.insertSql = None
-        self.host = '192.168.0.221'
+        self.host = 'localhost'
         self.conn = psycopg2.connect(
             dbname=self.dbname,
             user=self.user,
@@ -205,7 +205,7 @@ class DataMigration(object):
 
 if __name__ == '__main__':
     dat = DataMigration()
-    initiation_date = "20200131"
+    initiation_date = "20200531"
     r = datetime.datetime.strptime(initiation_date, "%Y%m%d") - datetime.datetime.today()
     for i in range(abs(r.days)):
         c = datetime.datetime.strptime(initiation_date, "%Y%m%d") + datetime.timedelta(days=i)

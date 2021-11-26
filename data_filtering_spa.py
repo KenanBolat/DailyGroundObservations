@@ -4,7 +4,7 @@ import random
 import datetime
 
 conn = psycopg2.connect(
-    "dbname = MGM user=postgres password = kalman host = 192.168.0.221 port = 5432"
+    "dbname = MGM user=postgres password = kalman host =localhost port = 5432"
 )
 print('Database Connection Successfull...')
 curr = conn.cursor()
@@ -62,7 +62,7 @@ def filtering(array, size):
 for station in stations:
     station_start = datetime.datetime.now()
     curr.execute(
-        f'SELECT snow_depth, m_date, stationid FROM spa_observation WHERE stationid = {station[0]} and m_date > \'2020-01-10\' and snow_depth is not NULL ORDER BY m_date ASC')
+        f'SELECT snow_depth, m_date, stationid FROM spa_observation WHERE stationid = {station[0]} and m_date > \'2020-05-31\' and snow_depth is not NULL ORDER BY m_date ASC')
     temp_observations = curr.fetchall()
     sd = [temp_observations[0] for temp_observations in temp_observations[:]]
     dates = [temp_observations[1]
